@@ -3,7 +3,7 @@ function redirect($pg_name)
 {
 	header('location:'.$pg_name);
 }
-function isvaliduser(){
+function isValiduser(){
 	global $connect;
 	$sess=session_id();
 	$sel_qry = "SELECT * FROM smshetty_login WHERE adm_sess_id ='$sess' AND adm_active = 0";

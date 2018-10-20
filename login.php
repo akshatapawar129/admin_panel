@@ -44,7 +44,10 @@
 <?php 
     include 'connection.php';
 
-    if(isValiduser())   redirect("index.html");
+    if(isValiduser())  
+    { 
+        redirect("index.php");
+    }
 
     if(isset($_POST['login']))
     {   
@@ -59,7 +62,7 @@
             $login_check = loginchk($us_nm,$ps_wd);
             if($login_check==0)
             {
-                redirect('index.html');
+                redirect('index.php');
             }
             elseif($login_check==1)
             {
