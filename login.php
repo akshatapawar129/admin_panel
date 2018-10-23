@@ -12,6 +12,7 @@
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <script src="js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 
 </head>
 <body class="white-bg">
@@ -29,6 +30,9 @@
                 </div>
                 <div class="form-group">
                     <input type="password" name="password" class="form-control" placeholder="Password*" required="required">
+                </div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LfkY3YUAAAAABWV4csQowhkcYk6ENIGwd6tvbPN"></div>
                 </div>
                 <button type="submit" name="login" class="btn btn-primary block full-width m-b">Login</button>
                 <a href="#"><small> Forgot password?</small></a>
@@ -51,30 +55,49 @@
 
     if(isset($_POST['login']))
     {   
-        $us_nm = trim(mysqli_real_escape_string($connect,$_POST['username']));
-        $ps_wd = trim(mysqli_real_escape_string($connect,$_POST['password']));
-        if((!strlen($us_nm)>0) || (!strlen($ps_wd)>0))
+        if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))
         {
-            echo "<script>warning('','Please fill mandatory fields');</script>";
+            $us_nm = trim(mysqli_real_escape_string($connect,$_POST['username']));
+            $ps_wd = trim(mysqli_real_escape_string($connect,$_POST['password']));
+            //your site secret key
+            $secret = '6LfkY3YUAAAAACM6t6no2DB4uwQKMVkPSi2HHe6Y';
+            //get verify response data
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+            $responseData = json_decode($verifyResponse);
+            if($responseData->success) 
+            {
+                if((!strlen($us_nm)>0) || (!strlen($ps_wd)>0))
+                {
+                    echo "<script>warning('','Please fill mandatory fields');</script>";
+                }
+                else
+                {
+                    $login_check = loginchk($us_nm,$ps_wd);
+                    if($login_check==0)
+                    {
+                        redirect('index.php');
+                    }
+                    elseif($login_check==1)
+                    {
+                        echo "<script>warning('','Invalid UserName/ Password. Try Again');</script>";
+                    }
+                    elseif ($login_check==2) {
+                        echo "<script>warning('','Error in updating details. Refresh and Try Again');</script>";
+                    }
+                    else{
+                        echo "<script>warning('','Error');</script>";
+                    }
+                } 
+            }
+            else
+            {
+                echo "<script>warning('','Robot verification failed, please try again.');</script>";
+            }
         }
         else
         {
-            $login_check = loginchk($us_nm,$ps_wd);
-            if($login_check==0)
-            {
-                redirect('index.php');
-            }
-            elseif($login_check==1)
-            {
-                echo "<script>warning('','Invalid UserName/ Password. Try Again');</script>";
-            }
-            elseif ($login_check==2) {
-                echo "<script>warning('','Error in updating details. Refresh and Try Again');</script>";
-            }
-            else{
-                echo "<script>warning('','Error');</script>";
-            }
-        } 
+            echo "<script>warning('','Please click on the reCAPTCHA box');</script>";
+        }
     }
 ?>
 </html>

@@ -21,7 +21,7 @@
                 <a href="index-2.html"><i class="fa fa-th-large"></i> <span class="nav-label">Home</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li><a href="slider-images.php">Slider Images</a></li>
-                    <li><a href="dashboard_2.html">Dashboard v.2</a></li>
+                    <li><a href="noticeboard.php">Noticeboard</a></li>
                     <li><a href="dashboard_3.html">Dashboard v.3</a></li>
                     <li><a href="dashboard_4_1.html">Dashboard v.4</a></li>
                     <li><a href="dashboard_5.html">Dashboard v.5 </a></li>

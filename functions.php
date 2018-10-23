@@ -3,7 +3,8 @@ function redirect($pg_name)
 {
 	header('location:'.$pg_name);
 }
-function isValiduser(){
+function isValiduser()
+{
 	global $connect;
 	$sess=session_id();
 	$sel_qry = "SELECT * FROM smshetty_login WHERE adm_sess_id ='$sess' AND adm_active = 0";
@@ -11,7 +12,9 @@ function isValiduser(){
 	if(mysqli_num_rows($res_sel)>0) return 1;
 	else	return 0;
 }
-function loginchk($usernm,$passwd){
+
+function loginchk($usernm,$passwd)
+{
 	global $connect;
 	$pass_enc = md5($passwd);
 	$sel_qry = "SELECT * FROM smshetty_login WHERE adm_us_nm = '$usernm' AND adm_pass = '$pass_enc' AND adm_active=0";
@@ -41,17 +44,17 @@ function loginchk($usernm,$passwd){
 }
 
 function exc_qry($qry)
+{
+	global $connect;
+    $resultArray=array();
+	$resultQueryFinal=mysqli_query($connect,$qry);
+	if(mysqli_num_rows($resultQueryFinal)>0)
 	{
-		global $connect;
-        $resultArray=array();
-		$resultQueryFinal=mysqli_query($connect,$qry);
-		if(mysqli_num_rows($resultQueryFinal)>0)
+		while($RwGtAlSbmsn=mysqli_fetch_array($resultQueryFinal))
 		{
-			while($RwGtAlSbmsn=mysqli_fetch_array($resultQueryFinal))
-			{
-				array_push($resultArray,$RwGtAlSbmsn);
-			}
+			array_push($resultArray,$RwGtAlSbmsn);
 		}
-		return array($resultArray);
-	}  
+	}
+	return array($resultArray);
+}  
 ?>
